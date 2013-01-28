@@ -1,18 +1,24 @@
 var ImageRotator = function (options) {
+    // Set main component properties
     this.width = options.width + 'px';
     this.height = options.height + 'px';
-    this.imageUrls = options.images;
-    this.interval = options.interval;
-    this.transition = options.transition;
-    this.loading = ko.observable(true);
+    this.interval = options.interval || 1000;
+    this.transition = options.transition || '0.4s linear';
+    this.imagesToLoad = options.images;
+    // Create sub-view-models for each image
     this.imageViewModels = [];
     options.images.forEach(function (image) {
-        var imageViewModel = {url:image, active:ko.observable(false)};
+        var imageViewModel = {
+            url:image,
+            active:ko.observable(false)
+        };
         this.imageViewModels.push(imageViewModel);
     }.bind(this));
-    this.imageViewModels[0].active(true);
+    // Show "Loading" panel until first image is loaded
+    this.showLoading = ko.observable(true);
+    // define empty array to control displayed images
     this.images = ko.observableArray();
-    this.jsInt = setInterval(this.nextImage.bind(this), this.interval);
+    // start loading of first image
     this.loadFirstImage();
 };
 
@@ -33,7 +39,7 @@ ImageRotator.prototype.onCtrlClick = function (imageVM) {
     if (imageVM == this.images()[1]) {
         return;
     }
-    clearInterval(this.jsInt);
+    clearInterval(this.switchInterval);
     var top = this.images.pop();
     this.images()[0] = imageVM;
     var ind = this.imageViewModels.indexOf(imageVM);
@@ -43,11 +49,13 @@ ImageRotator.prototype.onCtrlClick = function (imageVM) {
     top.active(false);
     imageVM.active(true);
     this.images.valueHasMutated();
-    this.jsInt = setInterval(this.nextImage.bind(this), this.interval);
+    this.switchInterval = setInterval(this.nextImage.bind(this), this.interval);
 };
 
 ImageRotator.prototype.removeDecorator = function (elem) {
-    var removeElement = function () {elem.parentNode.removeChild(elem)};
+    var removeElement = function () {
+        elem.parentNode.removeChild(elem)
+    };
     elem.addEventListener('webkitTransitionEnd', removeElement);
     elem.addEventListener('TransitionEnd', removeElement);
     elem.style.left = this.width;
@@ -55,23 +63,30 @@ ImageRotator.prototype.removeDecorator = function (elem) {
 };
 
 ImageRotator.prototype.loadFirstImage = function () {
-    var first = this.imageUrls.shift();
-    var imageEl = document.createElement('img');
-    imageEl.addEventListener('load', function (e) {
+    var first = this.imagesToLoad.shift();
+    this.loadImage(first, function(){
+        // Make first image "active" - currently displayed
+        this.imageViewModels[0].active(true);
         this.images.push(this.imageViewModels[0]);
         this.images.unshift(this.imageViewModels[1]);
-        this.loading(false);
-        this.imageUrls.shift();
-        this.loadOtherImages();
+        this.showLoading(false);
+        this.imagesToLoad.shift();
+        // set image switching interval
+        this.switchInterval = setInterval(this.nextImage.bind(this), this.interval);
+        this.loadRemainingImages();
     }.bind(this));
-    imageEl.src = first;
 };
 
-ImageRotator.prototype.loadOtherImages = function () {
-    this.imageUrls.forEach(function (image) {
-        var imageEl = document.createElement('img');
-        imageEl.addEventListener('load', function (e) {            //nothing yet
-        }.bind(this));
-        imageEl.src = image;
+ImageRotator.prototype.loadRemainingImages = function () {
+    this.imagesToLoad.forEach(function (image) {
+        this.loadImage(image);
     }.bind(this));
+};
+
+ImageRotator.prototype.loadImage = function (imgUrl, loadCallback) {
+    var imageEl = document.createElement('img');
+    if(loadCallback){
+        imageEl.addEventListener('load', loadCallback);
+    }
+    imageEl.src = imgUrl;
 };

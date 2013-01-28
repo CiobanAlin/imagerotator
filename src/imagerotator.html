@@ -23,7 +23,7 @@
     <div class="container" data-bind="style:{width:width, height:height}">
         <div class="images" data-bind="template: {name:'imageTpl', foreach:images, beforeRemove : function(elem){this.removeDecorator(elem)}.bind($data)}">
         </div>
-        <!-- ko if: loading -->
+        <!-- ko if: showLoading -->
             <div class="loading"><img src="http://pshabalin.files.wordpress.com/2013/01/loading.gif"/></div>
         <!-- /ko -->
     </div>
