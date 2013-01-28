@@ -1,0 +1,68 @@
+.rotator {
+
+}
+
+.ctr {
+    overflow: hidden;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+    border: 1px solid #b6b6b6;
+    border-color: rgba(0, 0, 0, 0.2);
+    margin: 5px auto;
+    position: relative;
+}
+
+.rotator .images {
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.rotator .images img {
+    position: absolute;
+    text-align: center;
+    display: block;
+}
+
+.loading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: white;
+}
+
+.loading img {
+    position: absolute;
+    left: 48%;
+    top:45%;
+}
+
+.controls {
+    width: 100%;
+    text-align: center;
+    margin: 10px auto;
+}
+
+.controls span {
+    display: inline-block;
+    height: 12px;
+    width: 12px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    margin: 0 5px;
+    cursor: pointer;
+    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.08) inset;
+    -webkit-transition: all 400ms;
+    transition: all 400ms;
+}
+
+.controls span.active {
+    cursor: default;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: none;    box-shadow: 0px -1px 1px 0px rgba(0, 0, 0, 0.35) inset;
+}

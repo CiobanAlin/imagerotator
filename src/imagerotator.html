@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Rotator</title>
+    <link href="style.css" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+    <script src="rotator.js"></script>
+    <script>
+        function init() {
+            var images = ['http://pshabalin.files.wordpress.com/2013/01/yellowstone-77.png', 'http://pshabalin.files.wordpress.com/2013/01/yellowstone-58.png', 'http://pshabalin.files.wordpress.com/2013/01/img_1082.png', 'http://pshabalin.files.wordpress.com/2013/01/dscn2295.png'];
+            var rotator = new ImageRotator({
+                images:images,
+                width:640,
+                height:426,
+                transition:'0.4s linear',
+                interval:5000});
+            ko.applyBindings(rotator, document.body);
+        }
+    </script>
+</head>
+<body onload="init()">
+
+<div class="rotator">
+    <div class="ctr" data-bind="style:{width:width, height:height}">
+        <div class="images" data-bind="
+                template: {name:'imageTpl',
+                           foreach:images,
+                           beforeRemove : function(elem){this.removeDecorator(elem)}.bind($data)}"></div>
+        <!-- ko if: loading -->
+        <div class="loading"><img src="http://pshabalin.files.wordpress.com/2013/01/loading.gif"/></div>
+        <!-- /ko -->
+    </div>
+    <div class="controls" data-bind="template: { name: 'controlTpl', foreach: imageViewModels}"></div>
+</div>
+</body>
+
+<script id="imageTpl" type="text/html"><img data-bind="attr : {src : url}"/></script>
+<script id="controlTpl" type="text/html">
+    <span data-bind="css : {active : active()}, click : $parent.onCtrlClick.bind($parent)"></span>
+</script>
+
+
+</html>
