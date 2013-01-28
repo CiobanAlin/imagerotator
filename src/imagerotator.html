@@ -19,15 +19,12 @@
     </script>
 </head>
 <body onload="init()">
-
 <div class="rotator">
-    <div class="ctr" data-bind="style:{width:width, height:height}">
-        <div class="images" data-bind="
-                template: {name:'imageTpl',
-                           foreach:images,
-                           beforeRemove : function(elem){this.removeDecorator(elem)}.bind($data)}"></div>
+    <div class="container" data-bind="style:{width:width, height:height}">
+        <div class="images" data-bind="template: {name:'imageTpl', foreach:images, beforeRemove : function(elem){this.removeDecorator(elem)}.bind($data)}">
+        </div>
         <!-- ko if: loading -->
-        <div class="loading"><img src="http://pshabalin.files.wordpress.com/2013/01/loading.gif"/></div>
+            <div class="loading"><img src="http://pshabalin.files.wordpress.com/2013/01/loading.gif"/></div>
         <!-- /ko -->
     </div>
     <div class="controls" data-bind="template: { name: 'controlTpl', foreach: imageViewModels}"></div>
